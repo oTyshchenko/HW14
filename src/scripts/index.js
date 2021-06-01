@@ -10,11 +10,11 @@ const getMiddleValue = (obj) => {
             summ += o.value;
             counter++;
         } else {
+            summ += o.value;
+            counter++;
             currentObject = o.children;
             currentObject.forEach(element => {
                 recursion(element);
-                  summ += element.value;
-                  counter++;
             });
         }
     };
@@ -27,51 +27,57 @@ const getMiddleValue = (obj) => {
 const getMinimunValue = (obj) => {
     let minimunValue = obj.value;
     let currentObject = obj;
+    let result;
 
     const recursion = (object) => {
         if (object.children === undefined) {
-            if (minimunValue >= object.value) {
+            if (minimunValue > object.value) {
                   minimunValue = object.value;
+                  result = object;
             }
         } else {
+            if (minimunValue > object.value) {
+                minimunValue = object.value;
+                result = object;
+            }
             currentObject = object.children;
             currentObject.forEach(element => {
                 recursion(element);
-                if (minimunValue >= currentObject.value) {
-                    minimunValue = currentObject.value;
-                }
             });
         }
     };
 
     recursion(currentObject);
     
-    return minimunValue;
+    return result;
 };
 
 const getMaximumValue = (obj) => {
     let maximumValue = obj.value;
     let currentObject = obj;
+    let result;
 
     const recursion = (object) => {
         if (object.children === undefined) {
-            if (maximumValue <= object.value) {
+            if (maximumValue < object.value) {
                 maximumValue = object.value;
+                result = object;
             }
         } else {
+            if (maximumValue < object.value) {
+                maximumValue = object.value;
+                result = object;
+            }
             currentObject = object.children;
             currentObject.forEach(element => {
                 recursion(element);
-                if (maximumValue <= currentObject.value) {
-                    maximumValue = currentObject.value;
-                }
             });
         }
     };
 
     recursion(currentObject);
 
-    return maximumValue;
+    return result;
 };
 
 console.log(getMiddleValue(graph));
