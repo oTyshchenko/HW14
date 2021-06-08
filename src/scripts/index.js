@@ -1,25 +1,35 @@
 import {graph} from './graph';
 
-let counter = 1;
 const getMiddleValue = (obj) => {
-    return obj.children.reduce((sum, el) => {
+    let summ = 0;
+    let counter = 0;
+    let currentObject = obj;
+    
+    const recursion = (object) => {
+        summ += object.value;
         counter++;
-        el.children !== undefined ? sum += getMiddleValue(el) : sum += el.value;
-        return sum;
-    }, obj.value);  
+        if (object.children !== undefined) {
+            currentObject = object.children;
+            currentObject.forEach(element => recursion(element));
+        } 
+    };
+
+    recursion(currentObject);
+
+    return summ / counter;
 };
-console.log(getMiddleValue(graph)/counter);
+console.log(getMiddleValue(graph));
 
 const getMinValue = (obj) => {
-    return obj.children.reduce((max, el) => {
+    return obj.children.reduce((min, el) => {
         if (el.children !== undefined) {
-            if(getMinValue(el).value < max.value) {
-                max = getMinValue(el);
+            if(getMinValue(el).value < min.value) {
+                min = getMinValue(el);
             }
-        } else if (el.value < max.value) {
-            max = el;
+        } else if (el.value < min.value) {
+            min = el;
         }
-        return max;
+        return min;
     }, obj);  
 };
 console.log(getMinValue(graph));
