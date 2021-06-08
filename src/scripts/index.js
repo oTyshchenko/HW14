@@ -1,56 +1,39 @@
 import {graph} from './graph';
 
+let counter = 1;
 const getMiddleValue = (obj) => {
-    let summ = 0;
-    let counter = 0;
-    let currentObject = obj;
-    
-    const recursion = (object) => {
-        summ += object.value;
+    return obj.children.reduce((sum, el) => {
         counter++;
-        if (object.children !== undefined) {
-            currentObject = object.children;
-            currentObject.forEach(element => recursion(element));
-        }
-    };
-
-    recursion(currentObject);
-
-    return summ / counter;
+        el.children !== undefined ? sum += getMiddleValue(el) : sum += el.value;
+        return sum;
+    }, obj.value);  
 };
-
-console.log(getMiddleValue(graph))
+console.log(getMiddleValue(graph)/counter);
 
 const getMinValue = (obj) => {
-
-    const recursion = (max, el) => {
+    return obj.children.reduce((max, el) => {
         if (el.children !== undefined) {
-            if(getMinValue(el) < max) {
+            if(getMinValue(el).value < max.value) {
                 max = getMinValue(el);
             }
-        } else if (el.value < max) {
-            max = el.value;
+        } else if (el.value < max.value) {
+            max = el;
         }
         return max;
-    }
-
-    return obj.children.reduce(recursion, obj.value);
-}
+    }, obj);  
+};
 console.log(getMinValue(graph));
 
 const getMaxValue = (obj) => {
-
-    const recursion = (max, el) => {
+    return obj.children.reduce((max, el) => {
         if (el.children !== undefined) {
-            if(getMaxValue(el) > max) {
+            if(getMaxValue(el).value > max.value) {
                 max = getMaxValue(el);
             }
-        } else if (el.value > max) {
-            max = el.value;
+        } else if (el.value > max.value) {
+            max = el;
         }
         return max;
-    }
-
-    return obj.children.reduce(recursion, obj.value);
-}
+    }, obj);   
+};
 console.log(getMaxValue(graph));
