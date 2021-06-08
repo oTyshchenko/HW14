@@ -6,12 +6,9 @@ const getMiddleValue = (obj) => {
     let currentObject = obj;
     
     const recursion = (object) => {
-        if (object.children === undefined) {
-            summ += object.value;
-            counter++;
-        } else {
-            summ += object.value;
-            counter++;
+        summ += object.value;
+        counter++;
+        if (object.children !== undefined) {
             currentObject = object.children;
             currentObject.forEach(element => recursion(element));
         }
@@ -22,60 +19,38 @@ const getMiddleValue = (obj) => {
     return summ / counter;
 };
 
-const getMinimunValue = (obj) => {
-    let minimunValue = obj.value;
-    let currentObject = obj;
-    let result;
-    
-    const condition = (obj) => {  
-        if (minimunValue > obj.value) {
-            minimunValue = obj.value;
-            result = obj;
+console.log(getMiddleValue(graph))
+
+const getMinValue = (obj) => {
+
+    const recursion = (max, el) => {
+        if (el.children !== undefined) {
+            if(getMinValue(el) < max) {
+                max = getMinValue(el);
+            }
+        } else if (el.value < max) {
+            max = el.value;
         }
+        return max;
     }
 
-    const recursion = (object) => {
-        if (object.children === undefined) {
-            condition(object);
-        } else {
-            condition(object);
-            currentObject = object.children;
-            currentObject.forEach(element => recursion(element));
+    return obj.children.reduce(recursion, obj.value);
+}
+console.log(getMinValue(graph));
+
+const getMaxValue = (obj) => {
+
+    const recursion = (max, el) => {
+        if (el.children !== undefined) {
+            if(getMaxValue(el) > max) {
+                max = getMaxValue(el);
+            }
+        } else if (el.value > max) {
+            max = el.value;
         }
-    };
-
-    recursion(currentObject);
-    
-    return result;
-};
-
-const getMaximumValue = (obj) => {
-    let maximumValue = obj.value;
-    let currentObject = obj;
-    let result;
-
-    const condition = (obj) => {  
-        if (maximumValue < obj.value) {
-            maximumValue = obj.value;
-            result = obj;
-        }
+        return max;
     }
 
-    const recursion = (object) => {
-        if (object.children === undefined) {
-            condition(object);
-        } else {
-            condition(object);
-            currentObject = object.children;
-            currentObject.forEach(element => recursion(element));
-        }
-    };
-
-    recursion(currentObject);
-
-    return result;
-};
-
-console.log(getMiddleValue(graph));
-console.log(getMinimunValue(graph));
-console.log(getMaximumValue(graph));
+    return obj.children.reduce(recursion, obj.value);
+}
+console.log(getMaxValue(graph));
