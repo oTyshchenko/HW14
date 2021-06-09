@@ -1,49 +1,29 @@
 import {graph} from './graph';
 
-const getMiddleValue = (obj) => {
-    let summ = 0;
-    let counter = 0;
-    let currentObject = obj;
-    
-    const recursion = (object) => {
-        summ += object.value;
-        counter++;
-        if (object.children !== undefined) {
-            currentObject = object.children;
-            currentObject.forEach(element => recursion(element));
-        } 
-    };
-
-    recursion(currentObject);
-
-    return summ / counter;
-};
-console.log(getMiddleValue(graph));
-
-const getMinValue = (obj) => {
-    return obj.children.reduce((min, el) => {
-        if (el.children !== undefined) {
-            if(getMinValue(el).value < min.value) {
-                min = getMinValue(el);
-            }
-        } else if (el.value < min.value) {
-            min = el;
+const getMiddleValue = (obj) => obj.children.reduce((acc, el) => {
+    if (el.children) {
+    const i =  getMiddleValue(el);
+    return {
+        sum: acc.sum + i.sum,
+        counter: acc.counter + i.counter
+    }
+    } else return {
+            sum: acc.sum + el.value,
+            counter: acc.counter + 1
         }
-        return min;
-    }, obj);  
-};
+},{sum: obj.value, counter: 1});
+
+const result = getMiddleValue(graph);
+console.log(result.sum / result.counter);
+
+const getMin = (a, b) => a.value < b.value ? a : b;
+const getMinValue = (obj) =>
+    obj.children.reduce((max, el) => (el.children) ? getMin(getMinValue(el), max) : getMin(el, max), obj);
+
 console.log(getMinValue(graph));
 
-const getMaxValue = (obj) => {
-    return obj.children.reduce((max, el) => {
-        if (el.children !== undefined) {
-            if(getMaxValue(el).value > max.value) {
-                max = getMaxValue(el);
-            }
-        } else if (el.value > max.value) {
-            max = el;
-        }
-        return max;
-    }, obj);   
-};
+const getMax = (a, b) => a.value > b.value ? a : b;
+const getMaxValue = (obj) =>
+    obj.children.reduce((max, el) => (el.children) ? getMax(getMaxValue(el), max) : getMax(el, max), obj); 
+
 console.log(getMaxValue(graph));
